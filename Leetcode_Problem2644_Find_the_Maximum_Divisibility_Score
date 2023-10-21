@@ -1,0 +1,79 @@
+int maxDivScore(int* nums, int numsSize, int* divisors, int divisorsSize){
+    int div , res = divisors[0], resdiv = 0;
+    for( int i = 0 ; i < divisorsSize ; i++)
+    {
+        div = 0;
+        for( int j = 0 ; j < numsSize ; j++)
+            div += !(nums[j]%divisors[i]) ? 1 : 0;
+        if(resdiv < div)
+        {
+            res = divisors[i];
+            resdiv = div;
+        }
+        else if((resdiv == div) && (res > divisors[i]))
+            res = divisors[i];
+    }
+    return res;
+}
+
+
+---------------------------------------------------------------------------------------------------------------
+
+
+int cmp(const void *a, const void *b)
+{
+    return(*(int*)a - *(int*)b);
+}
+
+int maxDivScore(int* nums, int numsSize, int* divisors, int divisorsSize){
+    qsort(divisors, divisorsSize, sizeof(int), cmp);
+    int predivisor = 0, maxAns = divisors[0], maxValue = 0;
+    for(int i = 0; i < divisorsSize; i++)
+    {
+        if(predivisor != divisors[i])
+        {
+            int currCnt = 0;
+            for(int j = 0; j < numsSize; j++)
+                currCnt += nums[j] % divisors[i]? 0 : 1;
+            if(currCnt > maxValue)
+            {
+                maxValue = currCnt;
+                maxAns = divisors[i];
+            }
+        }
+        predivisor = divisors[i];
+    }
+    return maxAns;
+}
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+int cmp(const void *a, const void *b)
+{
+    return(*(int*)a - *(int*)b);
+}
+
+int maxDivScore(int* nums, int numsSize, int* divisors, int divisorsSize){
+    int r, m = -1, s = 0, p = 0;
+    qsort(nums, numsSize, sizeof(int), cmp);
+    qsort(divisors, divisorsSize, sizeof(int), cmp);
+    for (int i = 0; i < divisorsSize; i++) {
+        int d = divisors[i], c = 0;
+        if (d == p) 
+            continue; 
+        else 
+            p = d;
+        while (s < numsSize && nums[s] < d) 
+            s++;
+        if (numsSize - s <= m) 
+            break;
+        for (int j = s; j < numsSize; j++)
+            c += !(nums[j] % d) ? 1 : 0;
+        if (c > m) 
+            m = c, r = d;
+    }
+    return r;
+}
